@@ -48,20 +48,73 @@ vec3 spherical (float r, float phi, float theta) {
 // }
 
 // Creates an animated torus knot
-vec3 sample (float t) {
-  float beta = t * PI;
-  
-  float ripple = ease(sin(t * 2.0 * PI + time) * 0.5 + 0.5) * 0.5;
-  float noise = time + index * ripple * 8.0;
-  
-  // animate radius on click
-  float radiusAnimation = animateRadius * animateStrength * 0.25;
-  float r = sin(index * 0.75 + beta * 2.0) * (0.75 + radiusAnimation);
-  float theta = 4.0 * beta + index * 0.25;
-  float phi = sin(index * 2.0 + beta * 8.0 + noise);
+// vec3 sample (float t) {
+//   float beta = t * PI;
+//
+//   float ripple = ease(sin(t * 2.0 * PI + time) * 0.5 + 0.5) * 0.5;
+//   float noise = time + index * ripple * 8.0;
+//
+//   // animate radius on click
+//   float radiusAnimation = animateRadius * animateStrength * 0.25;
+//   float r = sin(index * 0.75 + beta * 2.0) * (0.75 + radiusAnimation);
+//   float theta = 4.0 * beta + index * 0.25;
+//   float phi = sin(index * 2.0 + beta * 8.0 + noise);
+//
+//   return spherical(r, phi, theta);
+// }
 
-  return spherical(r, phi, theta);
+// vec3 sample (float t) {
+//   float angle = t * 2.0 * PI;
+//   vec2 rot = vec2(cos(angle) + cos(t * 200.0) / 10.0, sin(angle) + sin(t * 200.0) / 10.0);
+//   return vec3(rot, t / 20.0);
+// }
+
+// vec3 sample (float t) {
+//     float beta = t * PI;
+//     // float r = sin(index * 0.75 + beta * 2.0) * (0.75);
+//
+//     float radiusAnimation = animateRadius * animateStrength * 0.25;
+//     float r = (0.75 + radiusAnimation) + sin(t * 200.0) / 20.0;
+//     float theta = (0.75 + radiusAnimation) + cos(t * 200.0) / 20.0;// * beta + index * 0.25;
+//     float phi = (index * 2.0) + (beta * 2.0);//(index * 2.0 + beta * 8.0);
+//
+//     return spherical(r, phi, theta);
+// }
+
+// vec3 sample (float t) {
+//   float beta = t * PI * 2.0;
+//   float r = 1.0;
+//   float theta = beta;
+//   float phi = beta;
+//
+//   return spherical(r, phi, theta);
+// }
+
+// vec3 sample (float t) {
+//   float angle = t * 2.0 * PI;
+//
+//   float radius = 1.0;
+//   float phi = t * 2.0 * PI;
+//   float theta = (t * 2.0);
+//
+//   return spherical(radius, time + phi, theta);
+// }
+
+vec3 sample (float t) {
+  float ta = t * 2.0 * PI;
+  float radiusAnimation = animateRadius * animateStrength * -0.25;
+  float R = 1.0  * (0.75 + radiusAnimation) ;
+  float a = 1.0 / 10.0 * cos(1.0 * index + 1.0);
+  float w = 10.0;
+  float b = 1.0 / 20.0 * cos(PI / 2.0);
+
+  float x = (R + a * cos(w * ta)) * cos(ta);
+  float y = (R + a * cos(w * ta)) * sin(ta);
+  float z = (b * ta) + (a * sin(w * ta));
+
+  return vec3(x, y, z);
 }
+
 
 #ifdef ROBUST
 // ------
@@ -170,7 +223,7 @@ void createTube (float t, vec2 volume, out vec3 offset, out vec3 normal) {
   // sample the curve in two places
   vec3 current = sample(t);
   vec3 next = sample(nextT);
-  
+
   // compute the TBN matrix
   vec3 T = normalize(next - current);
   vec3 B = normalize(cross(T, next + current));
